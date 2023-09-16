@@ -116,6 +116,16 @@ fun CreatedBy() {
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
             IconButton(onClick = {
+                localUriHandler.openUri("https://www.youtube.com/@gabrielcastrodev")
+            }) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_youtube),
+                    contentDescription = "YouTube Channel",
+                    colorFilter = ColorFilter.tint(White),
+                    modifier = Modifier.size(30.dp)
+                )
+            }
+            IconButton(onClick = {
                 localUriHandler.openUri("https://github.com/gabrcastro")
             }) {
                 Image(
