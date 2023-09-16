@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Focus Minimal</string>
+    <string name="about">About</string>
+    <string name="title_activity_about">AboutActivity</string>
+    <string name="find_me_here">Find me here</string>
+    <string name="by_gabriel_castro_dev">By Gabriel Castro | Dev</string>
+    <string name="version">Version: 1.0.0</string>
+    <string name="title_activity_main">MainActivity</string>
+</resources>
