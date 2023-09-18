@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
@@ -38,6 +39,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -54,6 +56,7 @@ import gabrielcastrodev.pomora.ui.theme.Blue
 import gabrielcastrodev.pomora.ui.theme.BlueOpac
 import gabrielcastrodev.pomora.ui.theme.Green
 import gabrielcastrodev.pomora.ui.theme.GreenOpac
+import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,6 +74,8 @@ fun App(navController: NavController, settingsViewModel: SettingsViewModel) {
                     openAlertDialog.value = false
                 },
                 dialogTitle = "Configurações",
+                timer = "25:00",
+                pause = "5:00"
             )
         }
     }
@@ -88,7 +93,6 @@ fun App(navController: NavController, settingsViewModel: SettingsViewModel) {
                 actions = {
                     IconButton(
                         onClick = {
-                            /* doSomething() */
                             navController.navigate("about_screen")
                         })
                     {
@@ -127,7 +131,6 @@ fun App(navController: NavController, settingsViewModel: SettingsViewModel) {
                         ) {
                             TimerCount(
                                 modifier = Modifier.size(200.dp),
-                                state = settingsState
                             )
                         }
                     }
@@ -140,8 +143,6 @@ fun App(navController: NavController, settingsViewModel: SettingsViewModel) {
 @Composable
 fun TimerCount(
     viewModel: TimerViewModel = viewModel(),
-    state: SettingsState,
-    initialValue: Float = 1f,
     strokeWidth: Dp = 5.dp,
     modifier: Modifier = Modifier,
 ) {
@@ -150,31 +151,7 @@ fun TimerCount(
         mutableStateOf(IntSize.Zero)
     }
 
-//    var value by remember {
-//        mutableStateOf(initialValue)
-//    }
-
     viewModel.apply {
-//        val h = timerText.value.split(":")[0]
-//        val m = timerText.value.split(":")[1]
-//        val s = timerText.value.split(":")[2]
-//
-//        val total = (TimeUnit.HOURS.toMillis(h.toLong()) +
-//                    TimeUnit.MINUTES.toMillis(m.toLong()) +
-//                    TimeUnit.SECONDS.toMillis(s.toLong())) * 1000L
-//
-//        var currentTime by remember {
-//            mutableStateOf(total)
-//        }
-
-//        LaunchedEffect(key1 = currentTime, key2 = isPlaying.value) {
-//            if (isPlaying.value) {
-//                delay(100L)
-//                currentTime -= 100L
-//                value = (currentTime.toFloat() / total).coerceIn(0f, 1f)
-//            }
-//        }
-
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier.onSizeChanged { size = it }
@@ -194,31 +171,6 @@ fun TimerCount(
                     size = Size(size.width.toFloat(), size.height.toFloat()),
                     style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
                 )
-
-//                drawArc(
-//                    color = if (isPlaying.value) Green
-//                    else if (isPaused.value) GreenOpac else Color.Gray,
-//                    startAngle = -215f,
-//                    sweepAngle = 250f * currentTime,
-//                    useCenter = false,
-//                    size = Size(size.width.toFloat(), size.height.toFloat()),
-//                    style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round),
-//                )
-
-//                val center = Offset(size.width / 2f, size.height / 2f)
-//                val beta = (250f * value + 145f) * (PI / 180f).toFloat()
-//                val r = size.width / 2f
-//                val a = cos(beta) * r
-//                val b = sin(beta) * r
-
-//                drawPoints(
-//                    listOf(Offset(center.x + a, center.y + b)),
-//                    pointMode = PointMode.Points,
-//                    color = if (isPlaying.value) Green
-//                    else if (isPaused.value) GreenOpac else Color.Gray,
-//                    strokeWidth = (strokeWidth * 3f).toPx(),
-//                    cap = StrokeCap.Round
-//                )
             }
         }
 
@@ -227,7 +179,7 @@ fun TimerCount(
                 modifier = Modifier.align(Alignment.BottomCenter)
             ) {
                 Text(
-                    text = state.settingsTimer,
+                    text = viewModel.timerText.value,
                     fontSize = 35.sp,
                     fontWeight = FontWeight.Bold,
                     color = if (isTimer.value) {
@@ -305,7 +257,13 @@ fun AlertDialogSettings(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
     dialogTitle: String,
+    timer: String,
+    pause: String,
 ) {
+
+    var timerText by remember { mutableStateOf(timer) }
+    var pauseText by remember { mutableStateOf(pause) }
+
     AlertDialog(
         title = {
             Text(text = dialogTitle)
@@ -325,8 +283,9 @@ fun AlertDialogSettings(
                     placeholder = {
                         Text(text = "ex: 25:00")
                     },
-                    value = "",
-                    onValueChange = {}
+                    value = timerText,
+                    onValueChange = { timerText = it },
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
                 )
                 Spacer(modifier = Modifier.size(20.dp))
                 OutlinedTextField(
@@ -336,8 +295,9 @@ fun AlertDialogSettings(
                     placeholder = {
                         Text(text = "ex: 5:00")
                     },
-                    value = "",
-                    onValueChange = {}
+                    value = pauseText,
+                    onValueChange = { pauseText = it },
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
                 )
             }
         },

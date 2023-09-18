@@ -1,15 +1,18 @@
 package gabrielcastrodev.pomora
 
+import android.os.CountDownTimer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gabrielcastrodev.pomora.TimeFormat.timeFormat
 import gabrielcastrodev.pomora.data.model.Settings
 import gabrielcastrodev.pomora.data.room.SettingsDao
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 
 class SettingsViewModel(
     private val dao: SettingsDao
@@ -43,5 +46,4 @@ class SettingsViewModel(
             dao.insertSettings(settings)
         }
     }
-
 }

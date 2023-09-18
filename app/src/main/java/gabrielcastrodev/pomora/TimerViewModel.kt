@@ -9,17 +9,17 @@ import gabrielcastrodev.pomora.TimeFormat.timeFormat
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
-class TimerViewModel : ViewModel() {
+class TimerViewModel: ViewModel() {
 
     val isTimer = mutableStateOf(false)
 
     private var countDownTimer: CountDownTimer? = null
-    private val userInputHour = TimeUnit.HOURS.toMillis(0)
-    private val userInputMinute = TimeUnit.MINUTES.toMillis(0)
-    private val userInputSeconds = TimeUnit.SECONDS.toMillis(10)
+//    val inputHour = TimeUnit.HOURS.toMillis(0)
+    val input = TimeUnit.MINUTES.toMillis(0)
+//    val inputSeconds = TimeUnit.SECONDS.toMillis(0)
 
-    val initialTotalTimeInMillis = userInputHour + userInputMinute + userInputSeconds
-    var timeLeft = mutableStateOf(initialTotalTimeInMillis)
+    val initialTotalTimeInMillis = input
+    var timeLeft = mutableStateOf(TimeUnit.MINUTES.toMillis(5))
     val countDownInterval = 1000L
     val timerText = mutableStateOf(timeLeft.value.timeFormat())
     val isPlaying = mutableStateOf(false)
