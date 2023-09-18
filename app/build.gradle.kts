@@ -1,14 +1,15 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
 }
 
 android {
-    namespace = "gabrielcastrodev.focusminimal"
+    namespace = "gabrielcastrodev.pomora"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "gabrielcastrodev.focusminimal"
+        applicationId = "gabrielcastrodev.pomora"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -30,11 +31,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -75,4 +76,10 @@ dependencies {
 
     // navigation
     implementation("androidx.navigation:navigation-compose:2.7.2")
+
+    val roomVersion = "2.4.3"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
 }

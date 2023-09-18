@@ -1,4 +1,4 @@
-package gabrielcastrodev.focusminimal
+package gabrielcastrodev.pomora
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package gabrielcastrodev.focusminimal.ui.theme
+package gabrielcastrodev.pomora.ui.theme
 
 import android.app.Activity
 import android.os.Build

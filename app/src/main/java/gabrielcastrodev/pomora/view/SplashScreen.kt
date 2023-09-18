@@ -1,10 +1,9 @@
-package gabrielcastrodev.focusminimal.view
+package gabrielcastrodev.pomora.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,7 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import gabrielcastrodev.focusminimal.R
+import gabrielcastrodev.pomora.R
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,12 +51,8 @@ fun SplashScreen(navController: NavController) {
                         modifier = Modifier
                             .size(100.dp)
                             .padding(bottom = 20.dp),
-                        painter = painterResource(id = R.drawable.ic_logo_focus_minimal),
+                        painter = painterResource(id = R.drawable.logo),
                         contentDescription = "Logo",
-                    )
-                    Text(
-                        text = "Focus Minimal",
-                        textAlign = TextAlign.Center
                     )
                 }
 

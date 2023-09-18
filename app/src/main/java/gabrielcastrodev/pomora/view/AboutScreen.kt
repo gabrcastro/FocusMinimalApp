@@ -1,4 +1,4 @@
-package gabrielcastrodev.focusminimal.view
+package gabrielcastrodev.pomora.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -27,8 +27,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import gabrielcastrodev.focusminimal.R
-import gabrielcastrodev.focusminimal.ui.theme.White
+import gabrielcastrodev.pomora.R
+import gabrielcastrodev.pomora.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,7 +80,7 @@ fun BodyAbout() {
             verticalArrangement = Arrangement.Center,
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_logo_focus_minimal),
+                painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo",
                 modifier = Modifier
                     .size(200.dp)
@@ -109,10 +109,8 @@ fun CreatedBy() {
         Text(text = stringResource(R.string.find_me_here))
         Row(
             modifier = Modifier
-                .padding(
-                    vertical = 30.dp
-                )
-                .fillMaxWidth(0.6f),
+                .padding(vertical = 35.dp)
+                .fillMaxWidth(0.8f),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
             IconButton(onClick = {
@@ -126,6 +124,16 @@ fun CreatedBy() {
                 )
             }
             IconButton(onClick = {
+                localUriHandler.openUri("https://twitter.com/ga_brielcastro")
+            }) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_twitterx),
+                    contentDescription = "GitHub",
+                    colorFilter = ColorFilter.tint(White),
+                    modifier = Modifier.size(29.dp)
+                )
+            }
+            IconButton(onClick = {
                 localUriHandler.openUri("https://github.com/gabrcastro")
             }) {
                 Image(
@@ -136,7 +144,7 @@ fun CreatedBy() {
                 )
             }
             IconButton(onClick = {
-                localUriHandler.openUri("https://www.instagram.com/gabrielcastrodev/")
+                localUriHandler.openUri("https://www.instagram.com/ga.brielcastro/")
             }) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_instagram),

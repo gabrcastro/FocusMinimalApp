@@ -1,4 +1,4 @@
-package gabrielcastrodev.focusminimal
+package gabrielcastrodev.pomora
 
 sealed class Screens(val route: String) {
     object splash : Screens("splash_screen")

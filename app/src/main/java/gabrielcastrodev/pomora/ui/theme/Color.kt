@@ -1,4 +1,4 @@
-package gabrielcastrodev.focusminimal.ui.theme
+package gabrielcastrodev.pomora.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
@@ -9,4 +9,5 @@ val Dark = Color(0xFF1E1E1E)
 //val BgDarkEditText = Color(0xFF2B2B2B)
 val Green = Color(0xFF00D186)
 val GreenOpac = Color(0xFF37A37D)
-//val Blue = Color(0xFF84B5FF)
+val Blue = Color(0xFF84B5FF)
+val BlueOpac = Color(0xFF485972)

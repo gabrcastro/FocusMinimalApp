@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Focus Minimal"
+rootProject.name = "Pomora"
 include(":app")

@@ -1,15 +1,18 @@
-package gabrielcastrodev.focusminimal
+package gabrielcastrodev.pomora
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import gabrielcastrodev.focusminimal.view.About
-import gabrielcastrodev.focusminimal.view.App
-import gabrielcastrodev.focusminimal.view.SplashScreen
+import gabrielcastrodev.pomora.view.About
+import gabrielcastrodev.pomora.view.App
+import gabrielcastrodev.pomora.view.SplashScreen
 
 @Composable
-fun SetupNavController(navHostController: NavHostController) {
+fun SetupNavController(
+    navHostController: NavHostController,
+    settingsViewModel: SettingsViewModel
+) {
 
     NavHost(
         navController = navHostController,
@@ -19,7 +22,7 @@ fun SetupNavController(navHostController: NavHostController) {
             SplashScreen(navController = navHostController)
         }
         composable(route = Screens.app.route) {
-            App(navHostController)
+            App(navHostController, settingsViewModel)
         }
         composable(route = Screens.about.route) {
             About(navHostController)
