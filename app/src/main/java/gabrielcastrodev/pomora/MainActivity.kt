@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import gabrielcastrodev.pomora.data.room.SettingsDatabase
 import gabrielcastrodev.pomora.ui.theme.FocusMinimalTheme
+import gabrielcastrodev.pomora.viewmodel.SettingsViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

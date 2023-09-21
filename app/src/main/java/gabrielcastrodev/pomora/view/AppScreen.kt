@@ -1,5 +1,6 @@
 package gabrielcastrodev.pomora.view
 
+import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +39,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -49,14 +51,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import gabrielcastrodev.pomora.R
-import gabrielcastrodev.pomora.SettingsViewModel
-import gabrielcastrodev.pomora.SettingsState
-import gabrielcastrodev.pomora.TimerViewModel
+import gabrielcastrodev.pomora.viewmodel.SettingsViewModel
+import gabrielcastrodev.pomora.viewmodel.TimerViewModel
 import gabrielcastrodev.pomora.ui.theme.Blue
 import gabrielcastrodev.pomora.ui.theme.BlueOpac
 import gabrielcastrodev.pomora.ui.theme.Green
 import gabrielcastrodev.pomora.ui.theme.GreenOpac
-import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,18 +64,20 @@ fun App(navController: NavController, settingsViewModel: SettingsViewModel) {
 
     val openAlertDialog = remember { mutableStateOf(false) }
     val settingsState = settingsViewModel.state
+    val settings = settingsState.settings.last()
 
     when {
         openAlertDialog.value -> {
             AlertDialogSettings(
                 onDismissRequest = { openAlertDialog.value = false },
                 onConfirmation = {
-                    settingsViewModel.createSettings()
+                    settingsViewModel.createSettings(settings)
                     openAlertDialog.value = false
                 },
-                dialogTitle = "Configurações",
-                timer = "25:00",
-                pause = "5:00"
+                settingsViewModel = settingsViewModel,
+                dialogTitle = stringResource(R.string.settings_text),
+                timer = settings.timer,
+                pause = settings.pause
             )
         }
     }
@@ -144,7 +146,7 @@ fun App(navController: NavController, settingsViewModel: SettingsViewModel) {
 fun TimerCount(
     viewModel: TimerViewModel = viewModel(),
     strokeWidth: Dp = 5.dp,
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
 
     var size by remember {
@@ -152,6 +154,21 @@ fun TimerCount(
     }
 
     viewModel.apply {
+
+        when {
+            isTimerFinish.value -> {
+                AlertDialogTimeFinish(
+                    onDismissRequest = { isTimerFinish.value = false },
+                    onConfirmation = {
+                        isTimer.value = false
+                        isPaused.value = true
+                    },
+                    dialogTitle = "Iniciar tempo para pausa ?",
+                    text = "Está na hora do seu descanso!"
+                )
+            }
+        }
+
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier.onSizeChanged { size = it }
@@ -201,7 +218,7 @@ fun TimerCount(
                     },
                     restartFunction = {
                         resetTimer()
-//                        value = 1f
+                        isTimer.value = true
                     },
                     icon = if (isPaused.value) R.drawable.outline_play_circle_outline_24
                     else if (isPlaying.value) R.drawable.outline_motion_photos_paused_24
@@ -259,11 +276,11 @@ fun AlertDialogSettings(
     dialogTitle: String,
     timer: String,
     pause: String,
+    settingsViewModel: SettingsViewModel,
 ) {
-
     var timerText by remember { mutableStateOf(timer) }
     var pauseText by remember { mutableStateOf(pause) }
-
+    val maxChar = 4
     AlertDialog(
         title = {
             Text(text = dialogTitle)
@@ -281,11 +298,14 @@ fun AlertDialogSettings(
                         Text(text = "Tempo de prática")
                     },
                     placeholder = {
-                        Text(text = "ex: 25:00")
+                        Text(text = "25")
                     },
                     value = timerText,
-                    onValueChange = { timerText = it },
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+                    onValueChange = {
+                        if (it.length <= maxChar) timerText = it
+                        settingsViewModel.changeSettingsTimer(it)
+                    },
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 )
                 Spacer(modifier = Modifier.size(20.dp))
                 OutlinedTextField(
@@ -293,13 +313,55 @@ fun AlertDialogSettings(
                         Text(text = "Tempo de pausa")
                     },
                     placeholder = {
-                        Text(text = "ex: 5:00")
+                        Text(text = "5")
                     },
                     value = pauseText,
-                    onValueChange = { pauseText = it },
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+                    onValueChange = {
+                        if (it.length <= maxChar) pauseText = it
+                        settingsViewModel.changeSettingsPause(it)
+                    },
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 )
             }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation()
+                }
+            ) {
+                Text("Salvar")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                }
+            ) {
+                Text("Cancelar")
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AlertDialogTimeFinish(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    dialogTitle: String,
+    text: String,
+) {
+    AlertDialog(
+        title = {
+            Text(text = dialogTitle)
+        },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        text = {
+            Text(text = text)
         },
         confirmButton = {
             TextButton(

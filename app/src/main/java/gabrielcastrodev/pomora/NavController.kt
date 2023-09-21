@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import gabrielcastrodev.pomora.view.About
 import gabrielcastrodev.pomora.view.App
 import gabrielcastrodev.pomora.view.SplashScreen
+import gabrielcastrodev.pomora.viewmodel.SettingsViewModel
 
 @Composable
 fun SetupNavController(

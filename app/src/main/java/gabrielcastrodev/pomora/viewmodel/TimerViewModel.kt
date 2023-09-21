@@ -1,4 +1,4 @@
-package gabrielcastrodev.pomora
+package gabrielcastrodev.pomora.viewmodel
 
 
 import android.os.CountDownTimer
@@ -9,17 +9,19 @@ import gabrielcastrodev.pomora.TimeFormat.timeFormat
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
-class TimerViewModel: ViewModel() {
+class TimerViewModel(
+): ViewModel() {
 
-    val isTimer = mutableStateOf(false)
+    val isTimer = mutableStateOf(true)
+    val time = mutableStateOf("1")
+    val isTimerFinish = mutableStateOf(false)
+    val isPauseFinish = mutableStateOf(false)
 
     private var countDownTimer: CountDownTimer? = null
-//    val inputHour = TimeUnit.HOURS.toMillis(0)
-    val input = TimeUnit.MINUTES.toMillis(0)
-//    val inputSeconds = TimeUnit.SECONDS.toMillis(0)
+    val input = TimeUnit.MINUTES.toMillis(time.value.toLong())
 
     val initialTotalTimeInMillis = input
-    var timeLeft = mutableStateOf(TimeUnit.MINUTES.toMillis(5))
+    var timeLeft = mutableStateOf(TimeUnit.MINUTES.toMillis(time.value.toLong()))
     val countDownInterval = 1000L
     val timerText = mutableStateOf(timeLeft.value.timeFormat())
     val isPlaying = mutableStateOf(false)
@@ -37,6 +39,7 @@ class TimerViewModel: ViewModel() {
             override fun onFinish() {
                 timerText.value = initialTotalTimeInMillis.timeFormat()
                 isPlaying.value = false
+                isTimerFinish.value = true
             }
         }.start()
     }
@@ -54,5 +57,25 @@ class TimerViewModel: ViewModel() {
         timerText.value = initialTotalTimeInMillis.timeFormat()
         timeLeft.value = initialTotalTimeInMillis
         isTimer.value = true
+    }
+
+    fun startPause() = viewModelScope.launch {
+        time.value = "1"
+        isPlaying.value = true
+        isPaused.value = false
+        isTimer.value = false
+        countDownTimer = object : CountDownTimer(timeLeft.value, countDownInterval) {
+            override fun onTick(currentTimeLeft: Long) {
+                timerText.value = currentTimeLeft.timeFormat()
+                timeLeft.value = currentTimeLeft
+            }
+
+            override fun onFinish() {
+                timerText.value = initialTotalTimeInMillis.timeFormat()
+                isPlaying.value = false
+                isTimer.value = !isTimer.value
+                time.value = "1"
+            }
+        }.start()
     }
 }
